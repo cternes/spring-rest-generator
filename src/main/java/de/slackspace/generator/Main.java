@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Scanner;
@@ -17,6 +18,8 @@ import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.TemplateNotFoundException;
 
 public class Main {
+
+    private static final String TEMPLATE_FTLH = "template.ftlh";
 
     public static void main(String[] args) throws Exception {
         Configuration configuration = SetupBasicConfiguration();
@@ -52,7 +55,7 @@ public class Main {
 
     private static void generateFile(Configuration configuration, Map<String, String> values)
             throws TemplateNotFoundException, MalformedTemplateNameException, ParseException, IOException, TemplateException {
-        Template temp = configuration.getTemplate("template.ftlh");
+        Template temp = configuration.getTemplate(TEMPLATE_FTLH);
 
         File file = determineTargetFile(values);
 
@@ -74,6 +77,11 @@ public class Main {
         cfg.setDefaultEncoding("UTF-8");
         cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         cfg.setLogTemplateExceptions(true);
+
+        if(!Files.exists(Paths.get(TEMPLATE_FTLH))) {
+            System.out.println("Could not find template file '" + TEMPLATE_FTLH + "'");
+            System.exit(-1);
+        }
 
         return cfg;
     }
