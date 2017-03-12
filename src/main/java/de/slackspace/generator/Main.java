@@ -1,9 +1,10 @@
 package de.slackspace.generator;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -51,11 +52,20 @@ public class Main {
 
     private static void generateFile(Configuration configuration, Map<String, String> values)
             throws TemplateNotFoundException, MalformedTemplateNameException, ParseException, IOException, TemplateException {
-
         Template temp = configuration.getTemplate("template.ftlh");
 
-        Writer out = new OutputStreamWriter(System.out);
+        File file = determineTargetFile(values);
+
+        Writer out = new FileWriter(file);
         temp.process(values, out);
+    }
+
+    private static File determineTargetFile(Map<String, String> values) {
+        String targetClazz = values.get("fullyQualifiedTargetClazz");
+        String targetFilePath = targetClazz.replace('.', '/').concat(".java");
+        File file = Paths.get("src/main/java", targetFilePath).toFile();
+        file.getParentFile().mkdirs();
+        return file;
     }
 
     private static Configuration SetupBasicConfiguration() throws IOException {

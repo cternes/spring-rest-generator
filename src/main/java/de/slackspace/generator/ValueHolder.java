@@ -5,16 +5,10 @@ import java.util.Map;
 
 public class ValueHolder {
 
-    private String targetPackage;
     private String endpoint;
     private String clazz;
     private String model;
     private String repo;
-
-    public ValueHolder addTargetPackage(String targetPackage) {
-        this.targetPackage = targetPackage;
-        return this;
-    }
 
     public ValueHolder addRestEndpoint(String endpoint) {
         this.endpoint = endpoint;
@@ -41,6 +35,7 @@ public class ValueHolder {
         map.put("endpoint", endpoint);
         map.put("targetPackage", getPackageName(clazz));
         map.put("clazz", getSimpleName(clazz));
+        map.put("fullyQualifiedTargetClazz", clazz);
         map.put("fullyQualifiedModel", model);
         map.put("model", getSimpleName(model));
         map.put("fullyQualifiedRepo", repo);
